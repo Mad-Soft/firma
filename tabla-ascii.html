@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabla ASCII — Windows y Linux</title>
+<style>
+:root{
+  --bg:#e8e8e8; --ink:#1f2933; --muted:#5b6670; --accent:#1a6fc4;
+  --panel:#99ccff; --panel-ink:#143354; --row-a:#ffffff; --row-b:#e6f1fc; --sel:#c4defa;
+  --card:#cfcfcf; --card-line:#b4b4b4; --glyph-bg:#99ccff; --glyph-ink:#0b0b0b;
+  --mono:"DejaVu Sans Mono","Liberation Mono",Consolas,"Courier New",monospace;
+  --sans:"Liberation Sans",Arial,Helvetica,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#1b1f24; --ink:#e4e8ec; --muted:#9aa5b1; --accent:#6db3ff;
+    --panel:#2b4d73; --panel-ink:#e6f1ff; --row-a:#232a31; --row-b:#2a323a; --sel:#35597f;
+    --card:#2a3037; --card-line:#3d4650; --glyph-bg:#2b4d73; --glyph-ink:#ffffff;
+  }
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;padding:20px 16px 40px;font-family:var(--sans);color:var(--ink);line-height:1.35}
+.wrap{max-width:1100px;margin:0 auto}
+h1{margin:0;font-size:2rem;font-weight:400;color:var(--accent)}
+.sub{margin:4px 0 18px;color:var(--muted);font-size:1.05rem}
+.chip{display:inline-block;min-width:2.2em;text-align:center;padding:1px 8px;margin-left:4px;background:var(--row-b);border:1px solid var(--card-line);border-radius:3px;color:var(--ink);font-family:var(--mono)}
+.layout{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.tables{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;flex:1 1 640px}
+.printable .g,.extended .g{font-size:.88rem}
+.box{border:2px solid var(--panel);border-radius:3px;background:var(--panel)}
+.box>h2{margin:0;padding:8px 6px 6px;text-align:center;font-size:1.05rem;font-weight:400;color:var(--panel-ink)}
+.cols{display:flex;gap:2px;padding:0 2px 2px}
+ul{list-style:none;margin:0;padding:0}
+.col{flex:1 1 0}
+.row{display:flex;align-items:center;gap:6px;padding:3px 6px;font-size:.78rem;cursor:pointer;outline:none;background:var(--row-a)}
+.row:nth-child(even){background:var(--row-b)}
+.row.sel,.row:focus-visible{background:var(--sel);box-shadow:inset 0 0 0 1px var(--accent)}
+.n{flex:0 0 2.1em;text-align:right;font-variant-numeric:tabular-nums}
+.g{flex:1 1 auto;text-align:center;font-family:var(--mono);font-weight:700;font-size:.95rem}
+.g.sm{font-family:var(--sans);font-size:.68rem;font-weight:700}
+.ds{flex:0 0 auto;font-size:.66rem;color:var(--muted);max-width:11em;text-align:left}
+.ctrl .row{padding:3px 4px}
+.ctrl .g{flex:0 0 2.6em;font-family:var(--sans);font-size:.78rem}
+.ctrl .ds{flex:1 1 auto;text-align:right;white-space:nowrap}
+.ctrl{width:240px}
+.printable{width:250px}
+.printable .row{padding-left:4px;padding-right:4px}
+.extended{width:330px}
+.side{flex:0 0 190px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border:2px solid var(--card-line);border-radius:3px;padding:14px 12px;text-align:center}
+.card h3{margin:0 0 10px;font-size:1rem}
+.big{height:112px;display:flex;align-items:center;justify-content:center;background:var(--glyph-bg);color:var(--glyph-ink);border:1px solid var(--card-line);font-family:var(--mono);font-weight:700;font-size:4.6rem;cursor:pointer;overflow:hidden}
+.big.txt{font-family:var(--sans);font-size:2rem}
+.keys{margin-top:12px;font-size:.95rem}
+.keys .k{display:block;margin:0 0 6px;font-weight:700;font-family:var(--mono);font-size:.82rem}
+.keys .hint{display:block;font-size:.72rem;font-weight:400;color:var(--muted);font-family:var(--sans)}
+.det{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--card-line);font-size:.78rem;text-align:left;display:grid;grid-template-columns:auto 1fr;gap:3px 10px}
+.det dt{color:var(--muted)} .det dd{margin:0;font-family:var(--mono)}
+.favs{border:2px solid var(--panel);background:var(--panel)}
+.favs h2{margin:0;padding:8px 6px;text-align:center;font-size:1.05rem;font-weight:400;color:var(--panel-ink)}
+.fav{display:flex;align-items:center;gap:10px;padding:6px 8px}
+.fav .fg{flex:0 0 2em;text-align:center;font-family:var(--mono);font-weight:700;font-size:1.3rem}
+.fav .ft{font-size:.78rem;line-height:1.25}
+.fav small{display:block;color:var(--muted);font-size:.68rem}
+.note{margin:18px 0 0;font-size:.78rem;color:var(--muted);max-width:75ch}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#14202b;color:#fff;padding:8px 16px;border-radius:4px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .15s}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+@media (max-width:700px){.ctrl,.printable,.extended,.side{width:100%;flex-basis:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="title">Letra mayúscula A</h1>
+  <p class="sub" id="sub"></p>
+  <div class="layout">
+    <div class="tables">
+      <section class="box ctrl"><h2>Caracteres de control ASCII</h2><div class="cols"><ul class="col" id="c-ctrl"></ul></div></section>
+      <section class="box printable"><h2>Caracteres imprimibles ASCII</h2><div class="cols" id="c-print"></div></section>
+      <section class="box extended"><h2>ASCII extendido (página 850)</h2><div class="cols" id="c-ext"></div></section>
+    </div>
+    <aside class="side">
+      <div class="card" id="card"></div>
+      <section class="favs"><h2>Los más consultados</h2><ul id="favs"></ul></section>
+    </aside>
+  </div>
+  <p class="note">Pasa el ratón por encima (o enfoca con el teclado) para ver cómo escribir cada carácter. Un clic copia el carácter al portapapeles. En Windows, el código ALT se teclea con el teclado numérico mientras mantienes pulsada la tecla alt; los códigos 128–255 usan la página OEM 850. En Linux (GTK, IBus), el código es el valor Unicode en hexadecimal.</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const D = [{"n": 0, "ctrl": 1, "abbr": "NUL", "es": "Car\u00e1cter nulo", "key": "@"}, {"n": 1, "ctrl": 1, "abbr": "SOH", "es": "Inicio de cabecera", "key": "A"}, {"n": 2, "ctrl": 1, "abbr": "STX", "es": "Inicio de texto", "key": "B"}, {"n": 3, "ctrl": 1, "abbr": "ETX", "es": "Fin de texto", "key": "C"}, {"n": 4, "ctrl": 1, "abbr": "EOT", "es": "Fin de transmisi\u00f3n", "key": "D"}, {"n": 5, "ctrl": 1, "abbr": "ENQ", "es": "Consulta", "key": "E"}, {"n": 6, "ctrl": 1, "abbr": "ACK", "es": "Confirmaci\u00f3n", "key": "F"}, {"n": 7, "ctrl": 1, "abbr": "BEL", "es": "Pitido", "key": "G"}, {"n": 8, "ctrl": 1, "abbr": "BS", "es": "Retroceso", "key": "H"}, {"n": 9, "ctrl": 1, "abbr": "HT", "es": "Tabulador horizontal", "key": "I"}, {"n": 10, "ctrl": 1, "abbr": "LF", "es": "Salto de l\u00ednea", "key": "J"}, {"n": 11, "ctrl": 1, "abbr": "VT", "es": "Tabulador vertical", "key": "K"}, {"n": 12, "ctrl": 1, "abbr": "FF", "es": "Salto de p\u00e1gina", "key": "L"}, {"n": 13, "ctrl": 1, "abbr": "CR", "es": "Retorno de carro", "key": "M"}, {"n": 14, "ctrl": 1, "abbr": "SO", "es": "Shift Out", "key": "N"}, {"n": 15, "ctrl": 1, "abbr": "SI", "es": "Shift In", "key": "O"}, {"n": 16, "ctrl": 1, "abbr": "DLE", "es": "Escape de enlace de datos", "key": "P"}, {"n": 17, "ctrl": 1, "abbr": "DC1", "es": "Control de dispositivo 1", "key": "Q"}, {"n": 18, "ctrl": 1, "abbr": "DC2", "es": "Control de dispositivo 2", "key": "R"}, {"n": 19, "ctrl": 1, "abbr": "DC3", "es": "Control de dispositivo 3", "key": "S"}, {"n": 20, "ctrl": 1, "abbr": "DC4", "es": "Control de dispositivo 4", "key": "T"}, {"n": 21, "ctrl": 1, "abbr": "NAK", "es": "Confirmaci\u00f3n negativa", "key": "U"}, {"n": 22, "ctrl": 1, "abbr": "SYN", "es": "Espera s\u00edncrona", "key": "V"}, {"n": 23, "ctrl": 1, "abbr": "ETB", "es": "Fin de bloque de transmisi\u00f3n", "key": "W"}, {"n": 24, "ctrl": 1, "abbr": "CAN", "es": "Cancelar", "key": "X"}, {"n": 25, "ctrl": 1, "abbr": "EM", "es": "Fin del medio", "key": "Y"}, {"n": 26, "ctrl": 1, "abbr": "SUB", "es": "Sustituir", "key": "Z"}, {"n": 27, "ctrl": 1, "abbr": "ESC", "es": "Escape", "key": "["}, {"n": 28, "ctrl": 1, "abbr": "FS", "es": "Separador de archivos", "key": "\\"}, {"n": 29, "ctrl": 1, "abbr": "GS", "es": "Separador de grupos", "key": "]"}, {"n": 30, "ctrl": 1, "abbr": "RS", "es": "Separador de registros", "key": "^"}, {"n": 31, "ctrl": 1, "abbr": "US", "es": "Separador de unidades", "key": "_"}, {"n": 32, "label": "espacio", "small": 1, "name": "Space", "u": 32}, {"n": 33, "label": "!", "small": 0, "name": "Exclamation mark", "u": 33}, {"n": 34, "label": "\"", "small": 0, "name": "Quotation mark", "u": 34}, {"n": 35, "label": "#", "small": 0, "name": "Number sign", "u": 35}, {"n": 36, "label": "$", "small": 0, "name": "Dollar sign", "u": 36}, {"n": 37, "label": "%", "small": 0, "name": "Percent sign", "u": 37}, {"n": 38, "label": "&", "small": 0, "name": "Ampersand", "u": 38}, {"n": 39, "label": "'", "small": 0, "name": "Apostrophe", "u": 39}, {"n": 40, "label": "(", "small": 0, "name": "Left parenthesis", "u": 40}, {"n": 41, "label": ")", "small": 0, "name": "Right parenthesis", "u": 41}, {"n": 42, "label": "*", "small": 0, "name": "Asterisk", "u": 42}, {"n": 43, "label": "+", "small": 0, "name": "Plus sign", "u": 43}, {"n": 44, "label": ",", "small": 0, "name": "Comma", "u": 44}, {"n": 45, "label": "-", "small": 0, "name": "Hyphen-minus", "u": 45}, {"n": 46, "label": ".", "small": 0, "name": "Full stop", "u": 46}, {"n": 47, "label": "/", "small": 0, "name": "Solidus", "u": 47}, {"n": 48, "label": "0", "small": 0, "name": "Digit zero", "u": 48}, {"n": 49, "label": "1", "small": 0, "name": "Digit one", "u": 49}, {"n": 50, "label": "2", "small": 0, "name": "Digit two", "u": 50}, {"n": 51, "label": "3", "small": 0, "name": "Digit three", "u": 51}, {"n": 52, "label": "4", "small": 0, "name": "Digit four", "u": 52}, {"n": 53, "label": "5", "small": 0, "name": "Digit five", "u": 53}, {"n": 54, "label": "6", "small": 0, "name": "Digit six", "u": 54}, {"n": 55, "label": "7", "small": 0, "name": "Digit seven", "u": 55}, {"n": 56, "label": "8", "small": 0, "name": "Digit eight", "u": 56}, {"n": 57, "label": "9", "small": 0, "name": "Digit nine", "u": 57}, {"n": 58, "label": ":", "small": 0, "name": "Colon", "u": 58}, {"n": 59, "label": ";", "small": 0, "name": "Semicolon", "u": 59}, {"n": 60, "label": "<", "small": 0, "name": "Less-than sign", "u": 60}, {"n": 61, "label": "=", "small": 0, "name": "Equals sign", "u": 61}, {"n": 62, "label": ">", "small": 0, "name": "Greater-than sign", "u": 62}, {"n": 63, "label": "?", "small": 0, "name": "Question mark", "u": 63}, {"n": 64, "label": "@", "small": 0, "name": "Commercial at", "u": 64}, {"n": 65, "label": "A", "small": 0, "name": "Latin capital letter A", "u": 65}, {"n": 66, "label": "B", "small": 0, "name": "Latin capital letter B", "u": 66}, {"n": 67, "label": "C", "small": 0, "name": "Latin capital letter C", "u": 67}, {"n": 68, "label": "D", "small": 0, "name": "Latin capital letter D", "u": 68}, {"n": 69, "label": "E", "small": 0, "name": "Latin capital letter E", "u": 69}, {"n": 70, "label": "F", "small": 0, "name": "Latin capital letter F", "u": 70}, {"n": 71, "label": "G", "small": 0, "name": "Latin capital letter G", "u": 71}, {"n": 72, "label": "H", "small": 0, "name": "Latin capital letter H", "u": 72}, {"n": 73, "label": "I", "small": 0, "name": "Latin capital letter I", "u": 73}, {"n": 74, "label": "J", "small": 0, "name": "Latin capital letter J", "u": 74}, {"n": 75, "label": "K", "small": 0, "name": "Latin capital letter K", "u": 75}, {"n": 76, "label": "L", "small": 0, "name": "Latin capital letter L", "u": 76}, {"n": 77, "label": "M", "small": 0, "name": "Latin capital letter M", "u": 77}, {"n": 78, "label": "N", "small": 0, "name": "Latin capital letter N", "u": 78}, {"n": 79, "label": "O", "small": 0, "name": "Latin capital letter O", "u": 79}, {"n": 80, "label": "P", "small": 0, "name": "Latin capital letter P", "u": 80}, {"n": 81, "label": "Q", "small": 0, "name": "Latin capital letter Q", "u": 81}, {"n": 82, "label": "R", "small": 0, "name": "Latin capital letter R", "u": 82}, {"n": 83, "label": "S", "small": 0, "name": "Latin capital letter S", "u": 83}, {"n": 84, "label": "T", "small": 0, "name": "Latin capital letter T", "u": 84}, {"n": 85, "label": "U", "small": 0, "name": "Latin capital letter U", "u": 85}, {"n": 86, "label": "V", "small": 0, "name": "Latin capital letter V", "u": 86}, {"n": 87, "label": "W", "small": 0, "name": "Latin capital letter W", "u": 87}, {"n": 88, "label": "X", "small": 0, "name": "Latin capital letter X", "u": 88}, {"n": 89, "label": "Y", "small": 0, "name": "Latin capital letter Y", "u": 89}, {"n": 90, "label": "Z", "small": 0, "name": "Latin capital letter Z", "u": 90}, {"n": 91, "label": "[", "small": 0, "name": "Left square bracket", "u": 91}, {"n": 92, "label": "\\", "small": 0, "name": "Reverse solidus", "u": 92}, {"n": 93, "label": "]", "small": 0, "name": "Right square bracket", "u": 93}, {"n": 94, "label": "^", "small": 0, "name": "Circumflex accent", "u": 94}, {"n": 95, "label": "_", "small": 0, "name": "Low line", "u": 95}, {"n": 96, "label": "`", "small": 0, "name": "Grave accent", "u": 96}, {"n": 97, "label": "a", "small": 0, "name": "Latin small letter A", "u": 97}, {"n": 98, "label": "b", "small": 0, "name": "Latin small letter B", "u": 98}, {"n": 99, "label": "c", "small": 0, "name": "Latin small letter C", "u": 99}, {"n": 100, "label": "d", "small": 0, "name": "Latin small letter D", "u": 100}, {"n": 101, "label": "e", "small": 0, "name": "Latin small letter E", "u": 101}, {"n": 102, "label": "f", "small": 0, "name": "Latin small letter F", "u": 102}, {"n": 103, "label": "g", "small": 0, "name": "Latin small letter G", "u": 103}, {"n": 104, "label": "h", "small": 0, "name": "Latin small letter H", "u": 104}, {"n": 105, "label": "i", "small": 0, "name": "Latin small letter I", "u": 105}, {"n": 106, "label": "j", "small": 0, "name": "Latin small letter J", "u": 106}, {"n": 107, "label": "k", "small": 0, "name": "Latin small letter K", "u": 107}, {"n": 108, "label": "l", "small": 0, "name": "Latin small letter L", "u": 108}, {"n": 109, "label": "m", "small": 0, "name": "Latin small letter M", "u": 109}, {"n": 110, "label": "n", "small": 0, "name": "Latin small letter N", "u": 110}, {"n": 111, "label": "o", "small": 0, "name": "Latin small letter O", "u": 111}, {"n": 112, "label": "p", "small": 0, "name": "Latin small letter P", "u": 112}, {"n": 113, "label": "q", "small": 0, "name": "Latin small letter Q", "u": 113}, {"n": 114, "label": "r", "small": 0, "name": "Latin small letter R", "u": 114}, {"n": 115, "label": "s", "small": 0, "name": "Latin small letter S", "u": 115}, {"n": 116, "label": "t", "small": 0, "name": "Latin small letter T", "u": 116}, {"n": 117, "label": "u", "small": 0, "name": "Latin small letter U", "u": 117}, {"n": 118, "label": "v", "small": 0, "name": "Latin small letter V", "u": 118}, {"n": 119, "label": "w", "small": 0, "name": "Latin small letter W", "u": 119}, {"n": 120, "label": "x", "small": 0, "name": "Latin small letter X", "u": 120}, {"n": 121, "label": "y", "small": 0, "name": "Latin small letter Y", "u": 121}, {"n": 122, "label": "z", "small": 0, "name": "Latin small letter Z", "u": 122}, {"n": 123, "label": "{", "small": 0, "name": "Left curly bracket", "u": 123}, {"n": 124, "label": "|", "small": 0, "name": "Vertical line", "u": 124}, {"n": 125, "label": "}", "small": 0, "name": "Right curly bracket", "u": 125}, {"n": 126, "label": "~", "small": 0, "name": "Tilde", "u": 126}, {"n": 127, "ctrl": 1, "abbr": "DEL", "es": "Suprimir", "key": "?"}, {"n": 128, "label": "\u00c7", "small": 0, "name": "Latin capital letter C with cedilla", "u": 199}, {"n": 129, "label": "\u00fc", "small": 0, "name": "Latin small letter U with diaeresis", "u": 252}, {"n": 130, "label": "\u00e9", "small": 0, "name": "Latin small letter E with acute", "u": 233}, {"n": 131, "label": "\u00e2", "small": 0, "name": "Latin small letter A with circumflex", "u": 226}, {"n": 132, "label": "\u00e4", "small": 0, "name": "Latin small letter A with diaeresis", "u": 228}, {"n": 133, "label": "\u00e0", "small": 0, "name": "Latin small letter A with grave", "u": 224}, {"n": 134, "label": "\u00e5", "small": 0, "name": "Latin small letter A with ring above", "u": 229}, {"n": 135, "label": "\u00e7", "small": 0, "name": "Latin small letter C with cedilla", "u": 231}, {"n": 136, "label": "\u00ea", "small": 0, "name": "Latin small letter E with circumflex", "u": 234}, {"n": 137, "label": "\u00eb", "small": 0, "name": "Latin small letter E with diaeresis", "u": 235}, {"n": 138, "label": "\u00e8", "small": 0, "name": "Latin small letter E with grave", "u": 232}, {"n": 139, "label": "\u00ef", "small": 0, "name": "Latin small letter I with diaeresis", "u": 239}, {"n": 140, "label": "\u00ee", "small": 0, "name": "Latin small letter I with circumflex", "u": 238}, {"n": 141, "label": "\u00ec", "small": 0, "name": "Latin small letter I with grave", "u": 236}, {"n": 142, "label": "\u00c4", "small": 0, "name": "Latin capital letter A with diaeresis", "u": 196}, {"n": 143, "label": "\u00c5", "small": 0, "name": "Latin capital letter A with ring above", "u": 197}, {"n": 144, "label": "\u00c9", "small": 0, "name": "Latin capital letter E with acute", "u": 201}, {"n": 145, "label": "\u00e6", "small": 0, "name": "Latin small letter ae", "u": 230}, {"n": 146, "label": "\u00c6", "small": 0, "name": "Latin capital letter ae", "u": 198}, {"n": 147, "label": "\u00f4", "small": 0, "name": "Latin small letter O with circumflex", "u": 244}, {"n": 148, "label": "\u00f6", "small": 0, "name": "Latin small letter O with diaeresis", "u": 246}, {"n": 149, "label": "\u00f2", "small": 0, "name": "Latin small letter O with grave", "u": 242}, {"n": 150, "label": "\u00fb", "small": 0, "name": "Latin small letter U with circumflex", "u": 251}, {"n": 151, "label": "\u00f9", "small": 0, "name": "Latin small letter U with grave", "u": 249}, {"n": 152, "label": "\u00ff", "small": 0, "name": "Latin small letter Y with diaeresis", "u": 255}, {"n": 153, "label": "\u00d6", "small": 0, "name": "Latin capital letter O with diaeresis", "u": 214}, {"n": 154, "label": "\u00dc", "small": 0, "name": "Latin capital letter U with diaeresis", "u": 220}, {"n": 155, "label": "\u00f8", "small": 0, "name": "Latin small letter O with stroke", "u": 248}, {"n": 156, "label": "\u00a3", "small": 0, "name": "Pound sign", "u": 163}, {"n": 157, "label": "\u00d8", "small": 0, "name": "Latin capital letter O with stroke", "u": 216}, {"n": 158, "label": "\u00d7", "small": 0, "name": "Multiplication sign", "u": 215}, {"n": 159, "label": "\u0192", "small": 0, "name": "Latin small letter F with hook", "u": 402}, {"n": 160, "label": "\u00e1", "small": 0, "name": "Latin small letter A with acute", "u": 225}, {"n": 161, "label": "\u00ed", "small": 0, "name": "Latin small letter I with acute", "u": 237}, {"n": 162, "label": "\u00f3", "small": 0, "name": "Latin small letter O with acute", "u": 243}, {"n": 163, "label": "\u00fa", "small": 0, "name": "Latin small letter U with acute", "u": 250}, {"n": 164, "label": "\u00f1", "small": 0, "name": "Latin small letter N with tilde", "u": 241}, {"n": 165, "label": "\u00d1", "small": 0, "name": "Latin capital letter N with tilde", "u": 209}, {"n": 166, "label": "\u00aa", "small": 0, "name": "Feminine ordinal indicator", "u": 170}, {"n": 167, "label": "\u00ba", "small": 0, "name": "Masculine ordinal indicator", "u": 186}, {"n": 168, "label": "\u00bf", "small": 0, "name": "Inverted question mark", "u": 191}, {"n": 169, "label": "\u00ae", "small": 0, "name": "Registered sign", "u": 174}, {"n": 170, "label": "\u00ac", "small": 0, "name": "Not sign", "u": 172}, {"n": 171, "label": "\u00bd", "small": 0, "name": "Vulgar fraction one half", "u": 189}, {"n": 172, "label": "\u00bc", "small": 0, "name": "Vulgar fraction one quarter", "u": 188}, {"n": 173, "label": "\u00a1", "small": 0, "name": "Inverted exclamation mark", "u": 161}, {"n": 174, "label": "\u00ab", "small": 0, "name": "Left-pointing double angle quotation mark", "u": 171}, {"n": 175, "label": "\u00bb", "small": 0, "name": "Right-pointing double angle quotation mark", "u": 187}, {"n": 176, "label": "\u2591", "small": 0, "name": "Light shade", "u": 9617}, {"n": 177, "label": "\u2592", "small": 0, "name": "Medium shade", "u": 9618}, {"n": 178, "label": "\u2593", "small": 0, "name": "Dark shade", "u": 9619}, {"n": 179, "label": "\u2502", "small": 0, "name": "Box drawings light vertical", "u": 9474}, {"n": 180, "label": "\u2524", "small": 0, "name": "Box drawings light vertical and left", "u": 9508}, {"n": 181, "label": "\u00c1", "small": 0, "name": "Latin capital letter A with acute", "u": 193}, {"n": 182, "label": "\u00c2", "small": 0, "name": "Latin capital letter A with circumflex", "u": 194}, {"n": 183, "label": "\u00c0", "small": 0, "name": "Latin capital letter A with grave", "u": 192}, {"n": 184, "label": "\u00a9", "small": 0, "name": "Copyright sign", "u": 169}, {"n": 185, "label": "\u2563", "small": 0, "name": "Box drawings double vertical and left", "u": 9571}, {"n": 186, "label": "\u2551", "small": 0, "name": "Box drawings double vertical", "u": 9553}, {"n": 187, "label": "\u2557", "small": 0, "name": "Box drawings double down and left", "u": 9559}, {"n": 188, "label": "\u255d", "small": 0, "name": "Box drawings double up and left", "u": 9565}, {"n": 189, "label": "\u00a2", "small": 0, "name": "Cent sign", "u": 162}, {"n": 190, "label": "\u00a5", "small": 0, "name": "Yen sign", "u": 165}, {"n": 191, "label": "\u2510", "small": 0, "name": "Box drawings light down and left", "u": 9488}, {"n": 192, "label": "\u2514", "small": 0, "name": "Box drawings light up and right", "u": 9492}, {"n": 193, "label": "\u2534", "small": 0, "name": "Box drawings light up and horizontal", "u": 9524}, {"n": 194, "label": "\u252c", "small": 0, "name": "Box drawings light down and horizontal", "u": 9516}, {"n": 195, "label": "\u251c", "small": 0, "name": "Box drawings light vertical and right", "u": 9500}, {"n": 196, "label": "\u2500", "small": 0, "name": "Box drawings light horizontal", "u": 9472}, {"n": 197, "label": "\u253c", "small": 0, "name": "Box drawings light vertical and horizontal", "u": 9532}, {"n": 198, "label": "\u00e3", "small": 0, "name": "Latin small letter A with tilde", "u": 227}, {"n": 199, "label": "\u00c3", "small": 0, "name": "Latin capital letter A with tilde", "u": 195}, {"n": 200, "label": "\u255a", "small": 0, "name": "Box drawings double up and right", "u": 9562}, {"n": 201, "label": "\u2554", "small": 0, "name": "Box drawings double down and right", "u": 9556}, {"n": 202, "label": "\u2569", "small": 0, "name": "Box drawings double up and horizontal", "u": 9577}, {"n": 203, "label": "\u2566", "small": 0, "name": "Box drawings double down and horizontal", "u": 9574}, {"n": 204, "label": "\u2560", "small": 0, "name": "Box drawings double vertical and right", "u": 9568}, {"n": 205, "label": "\u2550", "small": 0, "name": "Box drawings double horizontal", "u": 9552}, {"n": 206, "label": "\u256c", "small": 0, "name": "Box drawings double vertical and horizontal", "u": 9580}, {"n": 207, "label": "\u00a4", "small": 0, "name": "Currency sign", "u": 164}, {"n": 208, "label": "\u00f0", "small": 0, "name": "Latin small letter eth", "u": 240}, {"n": 209, "label": "\u00d0", "small": 0, "name": "Latin capital letter eth", "u": 208}, {"n": 210, "label": "\u00ca", "small": 0, "name": "Latin capital letter E with circumflex", "u": 202}, {"n": 211, "label": "\u00cb", "small": 0, "name": "Latin capital letter E with diaeresis", "u": 203}, {"n": 212, "label": "\u00c8", "small": 0, "name": "Latin capital letter E with grave", "u": 200}, {"n": 213, "label": "\u0131", "small": 0, "name": "Latin small letter dotless I", "u": 305}, {"n": 214, "label": "\u00cd", "small": 0, "name": "Latin capital letter I with acute", "u": 205}, {"n": 215, "label": "\u00ce", "small": 0, "name": "Latin capital letter I with circumflex", "u": 206}, {"n": 216, "label": "\u00cf", "small": 0, "name": "Latin capital letter I with diaeresis", "u": 207}, {"n": 217, "label": "\u2518", "small": 0, "name": "Box drawings light up and left", "u": 9496}, {"n": 218, "label": "\u250c", "small": 0, "name": "Box drawings light down and right", "u": 9484}, {"n": 219, "label": "\u2588", "small": 0, "name": "Full block", "u": 9608}, {"n": 220, "label": "\u2584", "small": 0, "name": "Lower half block", "u": 9604}, {"n": 221, "label": "\u00a6", "small": 0, "name": "Broken bar", "u": 166}, {"n": 222, "label": "\u00cc", "small": 0, "name": "Latin capital letter I with grave", "u": 204}, {"n": 223, "label": "\u2580", "small": 0, "name": "Upper half block", "u": 9600}, {"n": 224, "label": "\u00d3", "small": 0, "name": "Latin capital letter O with acute", "u": 211}, {"n": 225, "label": "\u00df", "small": 0, "name": "Latin small letter sharp S", "u": 223}, {"n": 226, "label": "\u00d4", "small": 0, "name": "Latin capital letter O with circumflex", "u": 212}, {"n": 227, "label": "\u00d2", "small": 0, "name": "Latin capital letter O with grave", "u": 210}, {"n": 228, "label": "\u00f5", "small": 0, "name": "Latin small letter O with tilde", "u": 245}, {"n": 229, "label": "\u00d5", "small": 0, "name": "Latin capital letter O with tilde", "u": 213}, {"n": 230, "label": "\u00b5", "small": 0, "name": "Micro sign", "u": 181}, {"n": 231, "label": "\u00fe", "small": 0, "name": "Latin small letter thorn", "u": 254}, {"n": 232, "label": "\u00de", "small": 0, "name": "Latin capital letter thorn", "u": 222}, {"n": 233, "label": "\u00da", "small": 0, "name": "Latin capital letter U with acute", "u": 218}, {"n": 234, "label": "\u00db", "small": 0, "name": "Latin capital letter U with circumflex", "u": 219}, {"n": 235, "label": "\u00d9", "small": 0, "name": "Latin capital letter U with grave", "u": 217}, {"n": 236, "label": "\u00fd", "small": 0, "name": "Latin small letter Y with acute", "u": 253}, {"n": 237, "label": "\u00dd", "small": 0, "name": "Latin capital letter Y with acute", "u": 221}, {"n": 238, "label": "\u00af", "small": 0, "name": "Macron", "u": 175}, {"n": 239, "label": "\u00b4", "small": 0, "name": "Acute accent", "u": 180}, {"n": 240, "label": "shy", "small": 1, "name": "Soft hyphen", "u": 173}, {"n": 241, "label": "\u00b1", "small": 0, "name": "Plus-minus sign", "u": 177}, {"n": 242, "label": "\u2017", "small": 0, "name": "Double low line", "u": 8215}, {"n": 243, "label": "\u00be", "small": 0, "name": "Vulgar fraction three quarters", "u": 190}, {"n": 244, "label": "\u00b6", "small": 0, "name": "Pilcrow sign", "u": 182}, {"n": 245, "label": "\u00a7", "small": 0, "name": "Section sign", "u": 167}, {"n": 246, "label": "\u00f7", "small": 0, "name": "Division sign", "u": 247}, {"n": 247, "label": "\u00b8", "small": 0, "name": "Cedilla", "u": 184}, {"n": 248, "label": "\u00b0", "small": 0, "name": "Degree sign", "u": 176}, {"n": 249, "label": "\u00a8", "small": 0, "name": "Diaeresis", "u": 168}, {"n": 250, "label": "\u00b7", "small": 0, "name": "Middle dot", "u": 183}, {"n": 251, "label": "\u00b9", "small": 0, "name": "Superscript one", "u": 185}, {"n": 252, "label": "\u00b3", "small": 0, "name": "Superscript three", "u": 179}, {"n": 253, "label": "\u00b2", "small": 0, "name": "Superscript two", "u": 178}, {"n": 254, "label": "\u25a0", "small": 0, "name": "Black square", "u": 9632}, {"n": 255, "label": "nbsp", "small": 1, "name": "No-break space", "u": 160}];
+const FAVS = [[164, "e\u00f1e, n con tilde"], [254, "cuadrado negro"], [253, "super\u00edndice dos"], [248, "s\u00edmbolo de grado"], [39, "ap\u00f3strofo, comilla simple"], [230, "letra mu, micro"], [184, "s\u00edmbolo de copyright"], [169, "marca registrada"], [252, "super\u00edndice tres"], [160, "a con acento agudo"]];
+// Combinación de teclas de Linux para escribir por Unicode. Cámbiala aquí si en tu sistema es otra.
+const LINUX_KEYS = "ctrl + shift + u";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const hex = n => n.toString(16).toUpperCase();
+
+function glyphOf(d){ return d.ctrl ? d.abbr : d.label; }
+function charOf(d){ return d.ctrl ? null : String.fromCodePoint(d.u); }
+
+function row(n){
+  const d = D[n], li = document.createElement("li");
+  li.className = "row"; li.tabIndex = 0; li.dataset.n = n;
+  const num = d.ctrl && n < 32 ? String(n).padStart(2,"0") : String(n);
+  li.innerHTML = `<span class="n">${num}</span>` +
+    (d.ctrl ? `<span class="g">${d.abbr}</span><span class="ds">(${esc(d.es)})</span>`
+            : `<span class="g${d.small ? " sm" : ""}">${esc(d.label)}</span>`);
+  return li;
+}
+function fill(target, from, to){
+  const ul = document.createElement("ul"); ul.className = "col";
+  for (let n = from; n <= to; n++) ul.appendChild(row(n));
+  target.appendChild(ul);
+}
+const ctrlList = $("#c-ctrl");
+for (let n = 0; n < 32; n++) ctrlList.appendChild(row(n));
+ctrlList.appendChild(row(127));
+[[32,63],[64,95],[96,126]].forEach(r => fill($("#c-print"), r[0], r[1]));
+[[128,159],[160,191],[192,223],[224,255]].forEach(r => fill($("#c-ext"), r[0], r[1]));
+
+const favs = $("#favs");
+FAVS.forEach(([n, txt]) => {
+  const d = D[n], li = document.createElement("li");
+  li.className = "row fav"; li.tabIndex = 0; li.dataset.n = n;
+  li.innerHTML = `<span class="fg">${esc(charOf(d))}</span><span class="ft">${esc(txt)}<small>alt + ${n}</small></span>`;
+  favs.appendChild(li);
+});
+
+let current = 65;
+function select(n){
+  current = n;
+  document.querySelectorAll(".row.sel").forEach(e => e.classList.remove("sel"));
+  document.querySelectorAll(`.row[data-n="${n}"]`).forEach(e => e.classList.add("sel"));
+  const d = D[n], card = $("#card");
+  if (d.ctrl){
+    $("#title").textContent = d.es;
+    $("#sub").innerHTML = `Carácter de control ${n} : <span class="chip">${d.abbr}</span>`;
+    card.innerHTML = `<h3>ASCII ${n}</h3><div class="big txt" data-copy="0">${d.abbr}</div>
+      <div class="keys"><span class="k">terminal: ctrl + ${esc(d.key)}</span><span class="hint">No se puede escribir con alt ni por Unicode; es un carácter no imprimible.</span></div>`;
+    return;
+  }
+  const u = hex(d.u).padStart(4,"0");
+  const ch = charOf(d);
+  $("#title").textContent = d.name;
+  $("#sub").innerHTML = `${n < 128 ? "Código ASCII" : "Código ASCII extendido"} ${n} : <span class="chip">${d.small ? esc(d.label) : esc(ch)}</span>`;
+  card.innerHTML = `<h3>${n < 128 ? "ASCII" : "ASCII extendido"} ${n}</h3>
+    <div class="big${d.small ? " txt" : ""}" title="Copiar" data-copy="1">${esc(d.small ? d.label : ch)}</div>
+    <div class="keys"><span class="k">alt + ${n}</span>
+    <span class="k">${LINUX_KEYS} + ${hex(d.u)}<span class="hint">y luego Intro o espacio</span></span></div>
+    <dl class="det"><dt>Unicode</dt><dd>U+${u}</dd><dt>Hex byte</dt><dd>0x${hex(n).padStart(2,"0")}</dd><dt>HTML</dt><dd>&amp;#${d.u};</dd></dl>`;
+}
+
+const toast = $("#toast"); let tm;
+function say(msg){ toast.textContent = msg; toast.classList.add("on"); clearTimeout(tm); tm = setTimeout(() => toast.classList.remove("on"), 1300); }
+function copy(text){
+  const fallback = () => {
+    const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select();
+    try { document.execCommand("copy"); say("Copiado: " + text); } catch (e) { say("No se pudo copiar"); }
+    t.remove();
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(text).then(() => say("Copiado: " + text), fallback);
+  else fallback();
+}
+
+document.addEventListener("mouseover", e => { const r = e.target.closest(".row"); if (r) select(+r.dataset.n); });
+document.addEventListener("focusin", e => { const r = e.target.closest(".row"); if (r) select(+r.dataset.n); });
+document.addEventListener("click", e => {
+  const r = e.target.closest(".row"), b = e.target.closest(".big");
+  const n = r ? +r.dataset.n : (b && b.dataset.copy === "1" ? current : null);
+  if (n === null) return;
+  select(n);
+  const c = charOf(D[n]);
+  if (c) copy(c);
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.closest && e.target.closest(".row")) e.target.click();
+});
+select(65);
+</script>
+</body>
+</html>
